@@ -28,7 +28,20 @@ The application is designed with a focus on performance, security, and maintaina
 
 - **Performance:** The HTTP client is configured with a custom transport to optimize connection pooling and reuse, which is crucial for an application that makes a large number of API calls.
 
-## 3. Metadata Details
+## 3. Attachment Management
+
+Attachments are associated with their corresponding metadata in two ways:
+
+1.  **By Folder Structure:** The application creates a dedicated folder for each record, named `record_<ID>`, where `<ID>` is the unique identifier of the record. The `metadata.json` file and all associated attachments for that specific record are placed inside this folder. This provides a clear and organized grouping of a record's metadata and its corresponding files.
+
+2.  **Programmatically via API Calls:** The application's logic ensures this association:
+    *   First, it fetches a list of all `Request` records.
+    *   Then, for each individual `Request` record (e.g., the one with `ID=123`), it makes a separate API call to an endpoint like `/api/v2/requests/123/attachments`. This endpoint specifically returns a list of all attachments that belong *only* to that record.
+    *   Finally, it downloads those attachments into the `record_123` folder, alongside the `metadata.json` for that same record.
+
+This ensures that the association is guaranteed by both the API's design and the application's workflow.
+
+## 4. Metadata Details
 
 The `metadata.json` file saved for each record contains the following fields, extracted directly from the ZenGRC API:
 
@@ -57,7 +70,7 @@ The `metadata.json` file saved for each record contains the following fields, ex
 | `updated_at`         | string (date-time)             | The timestamp when the request was last updated.             |
 | `verifiers`          | array of `PersonInfo` objects  | The users responsible for verifying the request.             |
 
-## 4. Command-Line Arguments
+## 5. Command-Line Arguments
 
 The application is configured using the following command-line flags:
 
@@ -69,7 +82,7 @@ The application is configured using the following command-line flags:
 | `-workers`    | int     | `5`                    | The number of concurrent workers to use for downloading.                 |
 | `-overwrite`  | bool    | `false`                | If set to `true`, the application will overwrite existing files.         |
 
-## 5. Examples
+## 6. Examples
 
 ### Basic Usage
 
