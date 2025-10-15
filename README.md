@@ -28,7 +28,36 @@ The application is designed with a focus on performance, security, and maintaina
 
 - **Performance:** The HTTP client is configured with a custom transport to optimize connection pooling and reuse, which is crucial for an application that makes a large number of API calls.
 
-## 3. Command-Line Arguments
+## 3. Metadata Details
+
+The `metadata.json` file saved for each record contains the following fields, extracted directly from the ZenGRC API:
+
+| Field                | Data Type                      | Description                                                  |
+|----------------------|--------------------------------|--------------------------------------------------------------|
+| `id`                 | integer                        | The unique identifier for the request record.                |
+| `title`              | string                         | The title of the request.                                    |
+| `code`               | string                         | The code or reference number for the request.                |
+| `assignees`          | array of `PersonInfo` objects  | The users assigned to the request.                           |
+| `audit`              | `AuditInfo` object             | Information about the audit associated with the request.     |
+| `created_at`         | string (date-time)             | The timestamp when the request was created.                  |
+| `custom_attributes`  | map of `CustomAttrValue` objects | A map of custom attributes associated with the request.      |
+| `description`        | string (nullable)              | The description of the request.                              |
+| `due_date`           | string (date, nullable)        | The due date for the request.                                |
+| `links`              | `DetailsLinks` object          | Links related to the request, including a self-referencing URL. |
+| `mapped`             | `RequestMapped` object         | Information about objects mapped to the request.             |
+| `notes`              | string (nullable)              | Any notes associated with the request.                       |
+| `notify_assignee`    | boolean (nullable)             | A flag indicating if assignees should be notified.           |
+| `requesters`         | array of `PersonInfo` objects  | The users who created the request.                           |
+| `reviewers`          | array of `ReviewerStatus` objects | The users responsible for reviewing the request.             |
+| `start_date`         | string (date)                  | The start date of the request.                               |
+| `status`             | string                         | The current status of the request (e.g., "Open", "Completed"). |
+| `tags`               | array of strings               | Tags associated with the request.                            |
+| `test`               | string (nullable)              | The test plan or procedure for the request.                  |
+| `type`               | string                         | The object type, which is always "Request".                  |
+| `updated_at`         | string (date-time)             | The timestamp when the request was last updated.             |
+| `verifiers`          | array of `PersonInfo` objects  | The users responsible for verifying the request.             |
+
+## 4. Command-Line Arguments
 
 The application is configured using the following command-line flags:
 
@@ -40,7 +69,7 @@ The application is configured using the following command-line flags:
 | `-workers`    | int     | `5`                    | The number of concurrent workers to use for downloading.                 |
 | `-overwrite`  | bool    | `false`                | If set to `true`, the application will overwrite existing files.         |
 
-## 4. Examples
+## 5. Examples
 
 ### Basic Usage
 
