@@ -11,18 +11,27 @@ import (
 	"time"
 )
 
-// Client is a client for the ZenGRC API.
+// API endpoint paths
+const (
+	requestsPath           = "/api/v2/requests"
+	requestDetailsPath     = "/api/v2/requests/%d"
+	requestAttachmentsPath = "/api/v2/requests/%d/attachments"
+	downloadFilePath       = "/api/v2/requests/%d/files/%d"
+)
+
+// Client is a client for the ZenGRC API. It manages all interactions with the API.
 type Client struct {
 	apiURL     string
 	token      string
 	httpClient *http.Client
 }
 
-// NewClient creates a new ZenGRC API client.
+// NewClient creates a new ZenGRC API client with an optimized HTTP client.
 func NewClient(apiURL, token string) *Client {
+	// Configure a custom transport to optimize connection pooling and reuse.
 	transport := &http.Transport{
-		MaxIdleConns:    10,
-		IdleConnTimeout: 30 * time.Second,
+		MaxIdleConns:    10,               // Max idle connections to keep open.
+		IdleConnTimeout: 30 * time.Second, // Timeout for idle connections.
 	}
 
 	return &Client{
@@ -30,10 +39,14 @@ func NewClient(apiURL, token string) *Client {
 		token:  token,
 		httpClient: &http.Client{
 			Transport: transport,
-			Timeout:   60 * time.Second,
+			Timeout:   60 * time.Second, // Set a timeout for HTTP requests.
 		},
 	}
 }
+
+// ZenGRC API Data Structures
+// These structs are designed to match the JSON responses from the ZenGRC API,
+// based on the provided swagger-v3.json specification.
 
 // PersonInfo represents a person's basic information.
 type PersonInfo struct {
@@ -97,7 +110,7 @@ type ReviewerStatus struct {
 	Status   string     `json:"status"`
 }
 
-// Request represents a ZenGRC request object.
+// Request represents a ZenGRC request object, containing its full metadata.
 type Request struct {
 	ID               int                        `json:"id"`
 	Title            string                     `json:"title"`
@@ -147,6 +160,7 @@ type AttachmentListResponse struct {
 	} `json:"data"`
 }
 
+// newRequest creates a new HTTP request with the necessary headers for the ZenGRC API.
 func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request, error) {
 	url := fmt.Sprintf("%s%s", c.apiURL, path)
 	req, err := http.NewRequest(method, url, body)
@@ -159,6 +173,7 @@ func (c *Client) newRequest(method, path string, body io.Reader) (*http.Request,
 	return req, nil
 }
 
+// do executes an HTTP request and decodes the JSON response into the provided interface.
 func (c *Client) do(req *http.Request, v interface{}) error {
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -179,13 +194,6 @@ func (c *Client) do(req *http.Request, v interface{}) error {
 	return nil
 }
 
-const (
-	requestsPath           = "/api/v2/requests"
-	requestDetailsPath     = "/api/v2/requests/%d"
-	requestAttachmentsPath = "/api/v2/requests/%d/attachments"
-	downloadFilePath       = "/api/v2/requests/%d/files/%d"
-)
-
 // GetRequestDetails retrieves the details of a single request.
 func (c *Client) GetRequestDetails(requestID int) (*Request, error) {
 	path := fmt.Sprintf(requestDetailsPath, requestID)
@@ -202,11 +210,11 @@ func (c *Client) GetRequestDetails(requestID int) (*Request, error) {
 	return &request, nil
 }
 
-// GetRequests retrieves a list of requests.
+// GetRequests retrieves a list of requests, handling pagination via the cursor.
 func (c *Client) GetRequests(cursor string) (*RequestListResponse, error) {
 	path := requestsPath
 	if cursor != "" {
-		path = cursor
+		path = cursor // The cursor from the API response is a full path.
 	}
 
 	req, err := c.newRequest("GET", path, nil)
@@ -238,9 +246,12 @@ func (c *Client) GetAttachments(requestID int) ([]File, error) {
 	return resp.Data.Files, nil
 }
 
-// DownloadAttachment downloads an attachment.
+// DownloadAttachment downloads a single attachment to the specified output directory.
+// It includes a check to prevent overwriting existing files unless the overwrite flag is true.
 func (c *Client) DownloadAttachment(requestID int, attachment File, outputDir string, overwrite bool) error {
 	filePath := filepath.Join(outputDir, attachment.Name)
+
+	// If overwrite is false, check if the file already exists.
 	if !overwrite {
 		if _, err := os.Stat(filePath); err == nil {
 			fmt.Printf("File %s already exists. Skipping.\n", filePath)
@@ -265,17 +276,19 @@ func (c *Client) DownloadAttachment(requestID int, attachment File, outputDir st
 		return fmt.Errorf("API request failed with status: %s, body: %s", resp.Status, string(bodyBytes))
 	}
 
-	// Create the output file
+	// Create the output file.
 	out, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
 	defer out.Close()
 
+	// Copy the response body to the file.
 	_, err = io.Copy(out, resp.Body)
 	return err
 }
 
+// basicAuth returns a base64 encoded string for Basic Authentication.
 func basicAuth(token string) string {
 	return "Basic " + base64.StdEncoding.EncodeToString([]byte(token))
 }
