@@ -47,7 +47,7 @@ The application is configured using the following command-line flags:
 The following command will download all records and their attachments to the default `./zengrc_attachments` directory, using 5 concurrent workers.
 
 ```bash
-go run main.go client.go \
+./zengrc-downloader \
   -api-url "https://your-instance.api.zengrc.com" \
   -token "your_key_id:your_key_secret"
 ```
@@ -57,7 +57,7 @@ go run main.go client.go \
 This example downloads the records to a custom directory (`/path/to/my/backup`) and uses 10 concurrent workers.
 
 ```bash
-go run main.go client.go \
+./zengrc-downloader \
   -api-url "https://your-instance.api.zengrc.com" \
   -token "your_key_id:your_key_secret" \
   -output-dir "/path/to/my/backup" \
@@ -69,7 +69,7 @@ go run main.go client.go \
 If you need to re-download all files and overwrite any that already exist, use the `-overwrite` flag.
 
 ```bash
-go run main.go client.go \
+./zengrc-downloader \
   -api-url "https://your-instance.api.zengrc.com" \
   -token "your_key_id:your_key_secret" \
   -overwrite
