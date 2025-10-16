@@ -9,7 +9,6 @@ Search for the following documents to get knowledge: ZenGRC API authentication Z
 # Plan
 
 1. Project Scaffolding
-
 Create the basic structure for the Go application. This includes initializing a Go module, creating a `main.go` file to house the primary logic, and a `README.md` to provide clear instructions on how to use the program.
 
 2. Configuration Management
@@ -20,7 +19,6 @@ Develop a dedicated API client to handle all interactions with the ZenGRC API. T
 
 4. Record Retrieval and Processing
 The core functionality of the application will be to fetch and process records. Implement a function to retrieve the initial list of Request objects from the API. To optimize performance, use a worker pool pattern with goroutines to process these records concurrently. 
-
 For each record, the application will:
 - Create a dedicated folder named after the record's ID.
 - Fetch the full metadata for the record and save it as a `metadata.json` file within the folder.
