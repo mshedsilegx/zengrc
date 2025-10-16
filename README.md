@@ -81,6 +81,7 @@ The application is configured using the following command-line flags:
 | `-output-dir` | string  | `./zengrc_attachments` | The directory where the attachments and metadata will be saved.            |
 | `-workers`    | int     | `5`                    | The number of concurrent workers to use for downloading.                 |
 | `-overwrite`  | bool    | `false`                | If set to `true`, the application will overwrite existing files.         |
+| `-version`    | bool    | `false`                | Print the application version and exit.                                  |
 
 ## 6. Examples
 

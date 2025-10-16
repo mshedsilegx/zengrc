@@ -1,3 +1,3 @@
-module zengrc-attachment-downloader
+module criticalsys.net/zengrc
 
-go 1.24.3
+go 1.25.0

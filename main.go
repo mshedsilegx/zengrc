@@ -10,6 +10,8 @@ import (
 	"sync"
 )
 
+var version = "dev"
+
 // main is the entry point of the application. It parses command-line flags,
 // sets up a worker pool for concurrent processing, fetches all records from the
 // ZenGRC API, and distributes them to the workers for processing.
@@ -20,7 +22,13 @@ func main() {
 	outputDir := flag.String("output-dir", "./zengrc_attachments", "The directory where the attachments and metadata will be saved.")
 	numWorkers := flag.Int("workers", 5, "The number of concurrent workers to use.")
 	overwrite := flag.Bool("overwrite", false, "Overwrite existing files.")
+	showVersion := flag.Bool("version", false, "Print the application version and exit.")
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Println(version)
+		os.Exit(0)
+	}
 
 	// Validate that required flags are provided.
 	if *apiURL == "" || *token == "" {
