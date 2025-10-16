@@ -90,7 +90,7 @@ The application is configured using the following command-line flags:
 The following command will download all records and their attachments to the default `./zengrc_attachments` directory, using 5 concurrent workers.
 
 ```bash
-./zengrc-downloader \
+./zengrc \
   -api-url "https://your-instance.api.zengrc.com" \
   -token "your_key_id:your_key_secret"
 ```
@@ -100,7 +100,7 @@ The following command will download all records and their attachments to the def
 This example downloads the records to a custom directory (`/path/to/my/backup`) and uses 10 concurrent workers.
 
 ```bash
-./zengrc-downloader \
+./zengrc \
   -api-url "https://your-instance.api.zengrc.com" \
   -token "your_key_id:your_key_secret" \
   -output-dir "/path/to/my/backup" \
@@ -112,7 +112,7 @@ This example downloads the records to a custom directory (`/path/to/my/backup`) 
 If you need to re-download all files and overwrite any that already exist, use the `-overwrite` flag.
 
 ```bash
-./zengrc-downloader \
+./zengrc \
   -api-url "https://your-instance.api.zengrc.com" \
   -token "your_key_id:your_key_secret" \
   -overwrite
