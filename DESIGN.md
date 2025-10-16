@@ -8,22 +8,19 @@ Search for the following documents to get knowledge: ZenGRC API authentication Z
 
 # Plan
 
-1. Project Scaffolding
-Create the basic structure for the Go application. This includes initializing a Go module, creating a `main.go` file to house the primary logic, and a `README.md` to provide clear instructions on how to use the program.
+1. Project Scaffolding - Create the basic structure for the Go application. This includes initializing a Go module, creating a `main.go` file to house the primary logic, and a `README.md` to provide clear instructions on how to use the program.
 
-2. Configuration Management
-The application will require user-specific inputs to function correctly. Implement a command-line interface using the `flag` package to accept the ZenGRC API URL, an authentication token, and the desired output directory for the downloaded files. This approach ensures that sensitive information is not hardcoded into the application.
+2. Configuration Management - The application will require user-specific inputs to function correctly. Implement a command-line interface using the `flag` package to accept the ZenGRC API URL, an authentication token, and the desired output directory for the downloaded files. This approach ensures that sensitive information is not hardcoded into the application.
 
-3. API Client Implementation
-Develop a dedicated API client to handle all interactions with the ZenGRC API. This client will manage HTTP requests and include Go structs that represent the expected JSON responses for Request and Attachment objects, based on the now-retrieved API documentation.
+3. API Client Implementation - Develop a dedicated API client to handle all interactions with the ZenGRC API. This client will manage HTTP requests and include Go structs that represent the expected JSON responses for Request and Attachment objects, based on the now-retrieved API documentation.
 
-4. Record Retrieval and Processing
-The core functionality of the application will be to fetch and process records. Implement a function to retrieve the initial list of Request objects from the API. To optimize performance, use a worker pool pattern with goroutines to process these records concurrently. 
+4. Record Retrieval and Processing - The core functionality of the application will be to fetch and process records. Implement a function to retrieve the initial list of Request objects from the API. To optimize performance, use a worker pool pattern with goroutines to process these records concurrently. 
+
 For each record, the application will:
-- Create a dedicated folder named after the record's ID.
-- Fetch the full metadata for the record and save it as a `metadata.json` file within the folder.
-- Retrieve the list of attachments associated with the record.
-- Download each attachment into the record's folder.
+  - Create a dedicated folder named after the record's ID.
+  - Fetch the full metadata for the record and save it as a `metadata.json` file within the folder.
+  - Retrieve the list of attachments associated with the record.
+  - Download each attachment into the record's folder.
 
 5. Pre-commit steps
 Complete pre commit steps to make sure proper testing, verifications, reviews and reflections are done.
